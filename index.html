@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Fetcher</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Simple spinning loader */
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex flex-col items-center justify-center h-screen">
+    <div class="w-full max-w-xl mx-auto">
+        <div class="mb-4">
+            <label for="promptText" class="block text-gray-700 text-sm font-bold mb-2">Enter Text</label>
+            <input id="promptText" type="text" placeholder="Type your prompt..."
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="flex items-center justify-between">
+            <button onclick="fetchImage()"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button">
+                Submit
+            </button>
+        </div>
+
+        <!-- Loader -->
+        <div id="loader" class="flex justify-center mt-4 hidden">
+            <div class="loader"></div>
+        </div>
+
+        <!-- Display the current (larger) image -->
+        <div id="currentImageContainer" class="mt-4 flex justify-center">
+            <!-- The current image will be placed here -->
+        </div>
+
+        <!-- Scrollable row for image history -->
+        <div class="mt-4 overflow-x-auto w-full">
+            <div id="imageHistoryContainer" class="flex space-x-4 w-full"></div>
+        </div>
+    </div>
+
+    <script>
+        function fetchImage() {
+            const userText = document.getElementById('promptText').value;
+            const formattedText = userText.toLowerCase().replace(/\s+/g, '_'); // Replace spaces with underscores and convert to lowercase
+            const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(formattedText)}`;
+            // Show the loader
+            document.getElementById('loader').classList.remove('hidden');
+
+            fetch(url)
+                .then(response => response.blob())
+                .then(imageBlob => {
+                    const imageUrl = URL.createObjectURL(imageBlob);
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imageUrl;
+                    imgElement.alt = userText;
+                    imgElement.classList.add('rounded', 'shadow-lg', 'h-32', 'w-auto'); // History images, smaller size
+
+                    // Move the current image to the history
+                    const currentImageContainer = document.getElementById('currentImageContainer');
+                    if (currentImageContainer.firstChild) {
+                        const lastImage = currentImageContainer.removeChild(currentImageContainer.firstChild);
+                        const imageHistoryContainer = document.getElementById('imageHistoryContainer');
+                        imageHistoryContainer.appendChild(lastImage); // Append the last image to history
+                        if (lastImage.classList) {
+                            lastImage.classList.replace('h-64', 'h-32'); // Reduce the size for history
+                        }
+                    }
+
+                    // Create a larger version of the new image for the current display
+                    const largeImageElement = document.createElement('img');
+                    largeImageElement.src = imageUrl;
+                    largeImageElement.alt = userText;
+                    largeImageElement.classList.add('rounded', 'shadow-lg', 'h-64', 'w-auto'); // Current image, larger size
+
+                    // Display the new image as the current one
+                    currentImageContainer.appendChild(largeImageElement);
+                })
+                .catch(error => {
+                    console.error('Error fetching the image:', error);
+                })
+                .finally(() => {
+                    // Hide the loader after fetching
+                    document.getElementById('loader').classList.add('hidden');
+                });
+        }
+    </script>
+</body>
+
+</html>

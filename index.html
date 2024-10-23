@@ -67,13 +67,14 @@
                 <span id="elapsedTime" class="elapsed-time">0</span>
             </div>
         </div>
-
+        
         <!-- Display the current (larger) image and download button -->
         <div id="currentImageContainer" class="mt-4 flex flex-col items-center">
             <!-- The current image will be placed here -->
+            <p id="imageTiming"></p>
             <a id="downloadLink" href="#" download
-                class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded hidden">Download
-                Image</a>
+            class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded hidden">Download
+            Image</a>
         </div>
     </div>
 
@@ -93,6 +94,8 @@
 
             // Show the loader
             document.getElementById('loader').classList.remove('hidden');
+
+
             elapsedSeconds = 0; // Reset elapsed time
             document.getElementById('elapsedTime').textContent = '0'; // Reset display
             timer = setInterval(updateElapsedTime, 1000); // Start the timer
@@ -100,6 +103,7 @@
             fetch(url)
                 .then(response => response.blob())
                 .then(imageBlob => {
+                    document.getElementById('imageTiming').textContent = `Took ${elapsedSeconds} seconds to generate`; // Display the elapsed time
                     const imageUrl = URL.createObjectURL(imageBlob);
 
                     // Remove old image if present

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Fetcher</title>
+    <link rel="icon" type="image/x-icon" href="favicon.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Simple spinning loader */
@@ -15,7 +16,8 @@
             width: 50px;
             height: 50px;
             animation: spin 1s linear infinite;
-            position: relative; /* Position relative for absolute child elements */
+            position: relative;
+            /* Position relative for absolute child elements */
         }
 
         @keyframes spin {
@@ -36,7 +38,8 @@
             transform: translate(-50%, -50%);
             color: #3498db;
             font-weight: bold;
-            font-size: 14px; /* Adjust font size as needed */
+            font-size: 14px;
+            /* Adjust font size as needed */
         }
     </style>
 </head>
@@ -50,7 +53,7 @@
             <input id="promptText" type="text" placeholder="Type your prompt..."
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
         </div>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-center">
             <button onclick="fetchImage()"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button">
@@ -68,7 +71,9 @@
         <!-- Display the current (larger) image and download button -->
         <div id="currentImageContainer" class="mt-4 flex flex-col items-center">
             <!-- The current image will be placed here -->
-            <a id="downloadLink" href="#" download class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded hidden">Download Image</a>
+            <a id="downloadLink" href="#" download
+                class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded hidden">Download
+                Image</a>
         </div>
     </div>
 
